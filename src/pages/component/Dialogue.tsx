@@ -1,12 +1,9 @@
 import React from "react";
 
+import { DialogueProps } from "../../type";
+const Dialogue: React.FC<DialogueProps> = (props) => {
+    const {content} = props.message
+  return <div>{content}</div>;
+};
 
-const Dialogue: React.FC = () => {
-
-
-    return (
-        <div></div>
-    )
-}
-
-export default Dialogue
+export default Dialogue;
