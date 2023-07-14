@@ -1,8 +1,11 @@
-import React from "react"
+import React, { useState } from "react"
 import Header from "./component/footer"
 import Footer from "./component/footer"
 
 const ChatMain: React.FC = (props) => {
+    //判断是否正在请求
+    const [loading,setLoading] = useState<Boolean>(false);
+    
     return (
         <div style={{
             width: "100%",
@@ -14,19 +17,7 @@ const ChatMain: React.FC = (props) => {
             </div>
             <Header />
             <div className="flex-grow pl-[16px]  pr-[16px]">
-                {/* {historyChatlogRef.current.map((item, index) => {
-                    console.log(item);
-                    // useMemo((item) => { console.log(item) },[])
-                    // console.log(sonRef,item);
-                    return (
-                        <Dialogue
-                            ref={sonRef}
-                            content={item}
-                            key={index}
-                            popLog={popLog}
-                        ></Dialogue>
-                    );
-                })} */}
+
             </div>
             <Footer />
 
