@@ -2,9 +2,9 @@ import React from "react";
 
 const Header: React.FC = () => {
   return (
-    <div className="sticky top-0  w-full  z-50">
+    <div className="w-full  z-50">
       <div
-        className="flex justify-between p-2 z-10 sm:h-[70px] h-[60px] bg-white sm:bg-[#E5F1FF] mb-4"
+        className="flex justify-between p-2 z-10 sm:h-[70px] h-[60px] bg-white sm:bg-[#E5F1FF]"
         style={{
           borderBottom: "1px solid #f4f4f5",
         }}

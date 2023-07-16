@@ -1,20 +1,20 @@
 import React, { useState } from "react";
-import { SubmitIcon,PowerBy } from "../../config/contants";
+import { SubmitIcon, PowerBy } from "../../config/contants";
+import { Message } from "../../type";
 interface Props {
   loading: boolean;
+  request: any;
 }
 const Footer: React.FC<Props> = (props) => {
-  const { loading } = props;
+  const { loading, request } = props;
   const [inputValue, setInputValue] = useState<string>("");
-
-
 
   const keyDown = (e: any) => {
     if (e.keyCode === 13 && !e.shiftKey) {
       e.preventDefault();
       if (!loading) {
-        // settingChatLog();
         setInputValue("");
+        submitMessage()
         // window.reportGAEvent("sendMessage", "click", pathRes[1]);
       }
     }
@@ -23,8 +23,19 @@ const Footer: React.FC<Props> = (props) => {
       setInputValue(e.target.value + "\n");
     }
   };
+
+  const submitMessage = async () => {
+    console.log(inputValue);
+    request({
+      content: inputValue,
+      role: "user",
+      isChat: false,
+    });
+    setInputValue("");
+  };
+
   return (
-    <div className=" sticky bottom-0 px-4 !bg-white">
+    <div className=" px-4 !bg-white">
       <div className={`py-2 flex justify-start`}>{}</div>
       <div
         className="flex  p-2 rounded-[16px] items-center justify-between bg-[#F4F4F4]"
@@ -54,6 +65,7 @@ const Footer: React.FC<Props> = (props) => {
             className="flex-none pl-[8px] pt-[3px]"
             disabled={loading}
             onClick={() => {
+              submitMessage();
               //   settingChatLog();
               //   setChatContent("");
               //   window.reportGAEvent("sendMessage", "click", pathRes[1]);
@@ -70,7 +82,8 @@ const Footer: React.FC<Props> = (props) => {
           target="_blank"
           className="font-semibold"
           style={{ color: "#141410" }}
-          href={PowerBy.target} rel="noreferrer"
+          href={PowerBy.target}
+          rel="noreferrer"
         >
           {PowerBy.name}
         </a>

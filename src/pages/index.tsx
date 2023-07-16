@@ -4,21 +4,56 @@ import Footer from "./component/footer";
 import { Message } from "../type/index";
 import { getLocalStorageJson } from "../utils";
 import Dialogue from "./component/Dialogue";
-
+import { fetchEventSource } from "../request";
+import { EventSourceMessage } from "@microsoft/fetch-event-source";
 const storageKey = "your_storage";
-const historyMessage: never[] = [];
-const ChatMain: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<Message>({
+const historyMessage: Message[] = [
+  {
     content: "Hi~~~~~~~~~~~~~~~",
     role: "chatbot",
     isChat: true,
-  });
+  },
+];
+const ChatMain: React.FC = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [message, setMessage] = useState<Message>({});
+  const { current: historyList } = useRef<Message[]>(historyMessage);
   const { content } = message;
   const messageBodyRef = useRef<HTMLDivElement>(null);
   const messageList = useMemo(() => {
-    return [...historyMessage, message];
+    if (message.content) {
+      historyList.push(message);
+    }
+    return [...historyList];
   }, [content]);
+  const requestMessage = (message: Message) => {
+    setMessage(message);
+    setLoading(!loading);
+    const initContent: Message = {
+      content: "Waiting....",
+      role: "chatbot",
+      isChat: true,
+      status: "waiting",
+    };
+    setMessage(initContent)
+    //请求设置
+    fetchEventSource.onmessage = (e: EventSourceMessage) => {
+      console.log(e);
+    };
+    fetchEventSource.onerror = (error: any) => {
+      console.log(error);
+    };
+    fetchEventSource.post("/api/chat", {
+      body: JSON.stringify({
+        inputType: "MESSAGE",
+        inputValue: "what is time",
+        chatbotid: 98,
+        sessionid: "66a7eda0-01a6-4b84-94bd-7b8e2da2a645",
+        messages: [],
+      }),
+      headers: {},
+    });
+  };
   return (
     <div
       style={{
@@ -30,12 +65,15 @@ const ChatMain: React.FC = () => {
         // style={{ background: "#000" }}
       >
         <Header />
-        <div className="flex-grow pl-[16px]  pr-[16px]" ref={messageBodyRef}>
+        <div
+          className="flex-grow pl-[16px] pr-[16px] h-[50vh] overflow-y-auto"
+          ref={messageBodyRef}
+        >
           {messageList.map((item) => {
             return <Dialogue message={item} />;
           })}
         </div>
-        <Footer loading={loading} />
+        <Footer loading={loading} request={requestMessage} />
 
         <div
           aria-live="assertive"

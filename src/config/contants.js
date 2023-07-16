@@ -9,8 +9,15 @@ export const SubmitIcon = (
   </svg>
 );
 
-
 export const PowerBy = {
-    name:"ChatYcw",
-    target:"wwww.baidu.com"
-}
+  name: "ChatYcw",
+  target: "wwww.baidu.com",
+};
+
+export const ChatBotIcon = require("../static/bot-image.png")
+
+export const UserBotIcon = require("../static/usericon.png")
+
+
+// 是否开启本地缓存
+export const isCache = true
