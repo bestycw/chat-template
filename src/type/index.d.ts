@@ -1,8 +1,10 @@
+import { ReactNode } from "react";
+
 export interface Message {
-  content?: string;
+  content?: string | ReactNode;
   role?: string;
   isChat?: boolean;
-  status?:"waiting" | "processing" | "done"
+  // status?:"waiting" | "processing" | "done"
 }
 export interface DialogueProps {
   message: Message;

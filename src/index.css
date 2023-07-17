@@ -27,3 +27,20 @@ code {
   background-color: grey;
   border-radius: 32px;
 }
+.flicker {
+  animation: 1s van-cursor-flicker infinite;
+}
+
+@keyframes van-cursor-flicker {
+  from {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

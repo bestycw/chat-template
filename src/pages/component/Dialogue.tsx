@@ -44,7 +44,7 @@ const Dialogue: React.FC<DialogueProps> = (props) => {
               borderRadius: "10px 0px 10px 10px",
             }}
           >
-            <div className="flex flex-col items-start gap-4 break-words mr-3">
+            <div className="flex flex-col items-start gap-4 break-words">
               <div className="prose text-inherit text-left w-full break-words dark:prose-invert ">
                 <span>{content}</span>
               </div>

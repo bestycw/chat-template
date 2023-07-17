@@ -14,7 +14,7 @@ const Footer: React.FC<Props> = (props) => {
       e.preventDefault();
       if (!loading) {
         setInputValue("");
-        submitMessage()
+        submitMessage();
         // window.reportGAEvent("sendMessage", "click", pathRes[1]);
       }
     }
@@ -25,7 +25,7 @@ const Footer: React.FC<Props> = (props) => {
   };
 
   const submitMessage = async () => {
-    console.log(inputValue);
+    // console.log(inputValue);
     request({
       content: inputValue,
       role: "user",

@@ -1,7 +1,6 @@
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import { EventSourceMessage } from "@microsoft/fetch-event-source/lib/cjs/parse";
 import { reqBaseConfig } from "../type";
-import axios from "axios";
 import { bodyString } from "../utils";
 /**
  * EventSource方式
@@ -56,6 +55,7 @@ export default class EventSource {
     let { headers = {}, method, body } = params;
     if (!this.onmessage) console.warn("please set onmessage callbak");
     this._timeoutControl();
+
     fetchEventSource(this.Url + url, {
       method: "post",
       headers: { ...this.headers, ...headers },
