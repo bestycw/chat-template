@@ -6,6 +6,7 @@ import { getLocalStorageJson } from "../utils";
 import Dialogue from "./component/Dialogue";
 import { fetchEventSource } from "../request";
 import { EventSourceMessage } from "@microsoft/fetch-event-source";
+
 const storageKey = "your_storage";
 const historyMessage: Message[] = [
   {
@@ -16,39 +17,108 @@ const historyMessage: Message[] = [
 ];
 const ChatMain: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [message, setMessage] = useState<Message>({});
+  const [messageStore, setMessageStore] = useState<{
+    message: Message,
+    history: Message[],
+    status: string
+  }>({
+    message: {
+      content: "Hi~~~~~~~~~~~~~~~",
+      role: "chatbot",
+      isChat: true,
+    },
+    history: [],
+    status: "",
+
+  });
   const { current: historyList } = useRef<Message[]>(historyMessage);
+  const { message, history, status } = messageStore
   const { content } = message;
   const messageBodyRef = useRef<HTMLDivElement>(null);
   const messageList = useMemo(() => {
-    if (message.content) {
-      historyList.push(message);
-    }
-    return [...historyList];
-  }, [content]);
-  const requestMessage = (message: Message) => {
-    setMessage(message);
+    return [
+      ...history,
+      {
+        ...message
+      }
+    ]
+  }, [content,status]);
+  const requestMessage = (reqMessage: Message) => {
+    setMessageStore((prev) => {
+      const { message, history, status } = prev
+      return {
+        history: [...history, { ...message }],
+        message: { ...reqMessage },
+        status: "done"
+      }
+
+    });
     setLoading(!loading);
     const initContent: Message = {
       content: "Waiting....",
       role: "chatbot",
       isChat: true,
-      status: "waiting",
     };
-    setMessage(initContent)
+    setMessageStore((prev) => {
+      const { message, history, status } = prev
+      return {
+        history: [...history, { ...message }],
+        message: { ...initContent },
+        status: "done"
+      }
+    })
+    let content = ""
     //请求设置
     fetchEventSource.onmessage = (e: EventSourceMessage) => {
-      console.log(e);
+      console.log(e.data);
+      if (e.data === '[DONE]') {
+        console.log("数据已接受完毕")
+        setLoading(!!loading);
+        setMessageStore((prev) => {
+          const { message, history, status } = prev
+          message.content = content
+          return {
+            history: [...history],
+            message: { ...message },
+            status: "done"
+          }
+        })
+
+      } else {
+        const data = JSON.parse(e.data);
+        console.log("正在接受数据 ", data)
+        if (data.sourceDocs) {
+        } else if (data.data) {
+          const result = data.data;
+    
+          
+          content += result
+          initContent.content = content
+          setMessageStore((prev) => {
+            const { message, history, status } = prev
+            message.content = content
+            return {
+              history: [...history],
+              message: { ...message },
+              status: "processing"
+            }
+          })
+        }
+      }
     };
     fetchEventSource.onerror = (error: any) => {
       console.log(error);
     };
-    fetchEventSource.post("/api/chat", {
+    fetch("http://localhost:8080/chat",{
+      method:"post"
+    })
+
+    fetchEventSource.post("http://localhost:8080/chat", {
       body: JSON.stringify({
         inputType: "MESSAGE",
         inputValue: "what is time",
-        chatbotid: 98,
-        sessionid: "66a7eda0-01a6-4b84-94bd-7b8e2da2a645",
+        chatbotid: "semsorfi",
+        sessionid: "02d60930-d449-48ee-8eda-9c7abe20b98e",
         messages: [],
       }),
       headers: {},
@@ -62,7 +132,7 @@ const ChatMain: React.FC = () => {
     >
       <div
         className=" flex flex-col min-h-screen sm:text-[16px] text-[14px] leading-[1.75]"
-        // style={{ background: "#000" }}
+      // style={{ background: "#000" }}
       >
         <Header />
         <div
