@@ -6,6 +6,7 @@ import { getLocalStorageJson } from "../utils";
 import Dialogue from "./component/Dialogue";
 import { fetchEventSource } from "../request";
 import { EventSourceMessage } from "@microsoft/fetch-event-source";
+import { WaitingDom } from "../config/contants";
 
 const storageKey = "your_storage";
 const historyMessage: Message[] = [
@@ -15,6 +16,7 @@ const historyMessage: Message[] = [
     isChat: true,
   },
 ];
+const historyStore = getLocalStorageJson(storageKey)
 const ChatMain: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [messageStore, setMessageStore] = useState<{
@@ -42,7 +44,7 @@ const ChatMain: React.FC = () => {
         ...message
       }
     ]
-  }, [content,status]);
+  }, [content, status]);
   const requestMessage = (reqMessage: Message) => {
     setMessageStore((prev) => {
       const { message, history, status } = prev
@@ -55,7 +57,7 @@ const ChatMain: React.FC = () => {
     });
     setLoading(!loading);
     const initContent: Message = {
-      content: "Waiting....",
+      content: WaitingDom,
       role: "chatbot",
       isChat: true,
     };
@@ -83,15 +85,12 @@ const ChatMain: React.FC = () => {
             status: "done"
           }
         })
-
       } else {
         const data = JSON.parse(e.data);
         console.log("正在接受数据 ", data)
         if (data.sourceDocs) {
         } else if (data.data) {
           const result = data.data;
-    
-          
           content += result
           initContent.content = content
           setMessageStore((prev) => {
@@ -109,9 +108,9 @@ const ChatMain: React.FC = () => {
     fetchEventSource.onerror = (error: any) => {
       console.log(error);
     };
-    fetch("http://localhost:8080/chat",{
-      method:"post"
-    })
+    // fetch("http://localhost:8080/chat", {
+    //   method: "post"
+    // })
 
     fetchEventSource.post("http://localhost:8080/chat", {
       body: JSON.stringify({

@@ -1,5 +1,6 @@
 export function getLocalStorageJson(key: string): any {
   const value: any = localStorage.getItem(key);
+  // if()
   return JSON.parse(value);
 }
 export function setLocalStorageData(key: string, value: any) {
@@ -14,3 +15,5 @@ export function bodyString(body:any, target = "string") {
     return body;
   }
 }
+
+

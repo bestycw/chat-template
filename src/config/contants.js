@@ -1,3 +1,5 @@
+
+
 export const SubmitIcon = (
   <svg
     viewBox="0 0 20 20"
@@ -19,5 +21,9 @@ export const ChatBotIcon = require("../static/bot-image.png")
 export const UserBotIcon = require("../static/usericon.png")
 
 
+
 // 是否开启本地缓存
 export const isCache = true
+
+
+export const WaitingDom = <>Waiting....<span className="flicker">|</span></>
