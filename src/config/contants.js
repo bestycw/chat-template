@@ -27,3 +27,5 @@ export const isCache = true
 
 
 export const WaitingDom = <>Waiting....<span className="flicker">|</span></>
+
+export const NoContent = <span>The GPT can not get your question, please retry!</span>

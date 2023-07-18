@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { ReactNode, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Header from "./component/header";
 import Footer from "./component/footer";
 import { Message } from "../type/index";
@@ -6,7 +6,7 @@ import { getLocalStorageJson, scrollToElement } from "../utils";
 import Dialogue from "./component/Dialogue";
 import { fetchEventSource } from "../request";
 import { EventSourceMessage } from "@microsoft/fetch-event-source";
-import { WaitingDom } from "../config/contants";
+import { NoContent, WaitingDom } from "../config/contants";
 
 const storageKey = "your_storage";
 const historyMessage: Message[] = [
@@ -75,7 +75,7 @@ const ChatMain: React.FC = () => {
         status: "done",
       };
     });
-    let content = "";
+    let content: ReactNode | string = "";
     //请求设置
     fetchEventSource.onmessage = (e: EventSourceMessage) => {
       console.log(e.data);
@@ -84,6 +84,9 @@ const ChatMain: React.FC = () => {
         setLoading(!!loading);
         setMessageStore((prev) => {
           const { message, history, status } = prev;
+          if (!content) {
+            content = NoContent
+          }
           message.content = content;
           return {
             history: [...history],
@@ -144,7 +147,7 @@ const ChatMain: React.FC = () => {
     >
       <div
         className=" flex flex-col min-h-screen sm:text-[16px] text-[14px] leading-[1.75]"
-        // style={{ background: "#000" }}
+      // style={{ background: "#000" }}
       >
         <Header />
         <div
